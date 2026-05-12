@@ -1,0 +1,92 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog'))
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
+  .slice(0, 3);
+---
+
+<BaseLayout title="Home" description="AI strategist and thought leader helping organizations transform with intelligent automation.">
+
+  <!-- Hero -->
+  <section class="mx-auto max-w-4xl px-4 sm:px-6 pt-20 pb-16">
+    <div class="max-w-2xl">
+      <p class="text-accent font-mono text-sm mb-4 tracking-wide">Hello, I'm</p>
+      <h1 class="text-5xl sm:text-6xl font-bold text-white leading-tight mb-6">
+        C. York
+      </h1>
+      <p class="text-xl text-gray-300 leading-relaxed mb-8">
+        AI strategist helping organizations transform with intelligent automation.
+        I write about the intersection of AI capabilities, organizational change, and practical deployment.
+      </p>
+      <div class="flex flex-wrap gap-4">
+        <a href="/blog" class="inline-flex items-center gap-2 bg-accent hover:bg-accent-hover text-white font-medium px-6 py-3 rounded-lg transition-colors">
+          Read the Blog
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </a>
+        <a href="/about" class="inline-flex items-center gap-2 border border-gray-700 hover:border-gray-500 text-gray-300 hover:text-white font-medium px-6 py-3 rounded-lg transition-colors">
+          About Me
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Expertise -->
+  <section class="mx-auto max-w-4xl px-4 sm:px-6 py-12">
+    <h2 class="text-sm font-mono text-gray-500 uppercase tracking-widest mb-8">Areas of Focus</h2>
+    <div class="grid sm:grid-cols-3 gap-4">
+      {[
+        {
+          icon: '⚡',
+          title: 'AI Strategy',
+          desc: 'Designing roadmaps that align AI capabilities with real business outcomes.',
+        },
+        {
+          icon: '🔄',
+          title: 'Org Transformation',
+          desc: 'Leading change management for teams adopting intelligent automation.',
+        },
+        {
+          icon: '📝',
+          title: 'Thought Leadership',
+          desc: 'Writing and speaking on where AI is heading and what it means for organizations.',
+        },
+      ].map((item) => (
+        <div class="border border-gray-800 rounded-xl p-6 hover:border-accent/50 transition-colors bg-gray-900/30">
+          <div class="text-2xl mb-3">{item.icon}</div>
+          <h3 class="font-semibold text-white mb-2">{item.title}</h3>
+          <p class="text-gray-400 text-sm leading-relaxed">{item.desc}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Recent Posts -->
+  {posts.length > 0 && (
+    <section class="mx-auto max-w-4xl px-4 sm:px-6 py-12">
+      <div class="flex items-center justify-between mb-8">
+        <h2 class="text-sm font-mono text-gray-500 uppercase tracking-widest">Recent Writing</h2>
+        <a href="/blog" class="text-sm text-accent hover:text-accent-hover transition-colors">All posts →</a>
+      </div>
+      <div class="space-y-6">
+        {posts.map((post) => (
+          <article class="group border-b border-gray-800/60 pb-6 last:border-0">
+            <a href={`/blog/${post.slug}`} class="block">
+              <time class="text-xs text-gray-500 font-mono" datetime={post.data.pubDate.toISOString()}>
+                {post.data.pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+              </time>
+              <h3 class="text-lg font-semibold text-gray-100 group-hover:text-accent mt-1 transition-colors">
+                {post.data.title}
+              </h3>
+              <p class="text-gray-400 text-sm mt-1 leading-relaxed">{post.data.description}</p>
+            </a>
+          </article>
+        ))}
+      </div>
+    </section>
+  )}
+
+</BaseLayout>
